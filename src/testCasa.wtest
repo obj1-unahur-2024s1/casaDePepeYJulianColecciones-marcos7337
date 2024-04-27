@@ -1,0 +1,123 @@
+import casa.*
+import cosas.*
+
+test "algunas compras" {
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(heladera)
+	casaDePepeYJulian.comprar(cama)
+	
+	assert.equals([heladera], cosas)
+}
+
+test "cantidad de compras" {
+	cuentaCorriente.depositar(100000)
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(heladera)
+	casaDePepeYJulian.comprar(plancha)
+	casaDePepeYJulian.comprar(plancha)
+	
+	assert.equals(3, casaDePepeYJulian.cantidadDeCosasCompradas())
+}
+
+test "tiene comida" {
+	cuentaCorriente.depositar(100000)
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(heladera)
+	casaDePepeYJulian.comprar(plancha)
+	casaDePepeYJulian.comprar(plancha)
+	
+	assert.notThat(casaDePepeYJulian.tieneComida())
+}
+
+test "viene de equiparse" {
+	cuentaCorriente.depositar(100000)
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(plancha)
+	casaDePepeYJulian.comprar(plancha)
+	
+	assert.that(casaDePepeYJulian.vieneDeEquiparse())
+}
+
+test "es derrochosa" {
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(plancha)
+	casaDePepeYJulian.comprar(plancha)
+	
+	assert.notThat(casaDePepeYJulian.esDerrochosa())
+}
+
+test "compra más cara" {
+	cuentaCorriente.depositar(100000)
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(microondas)
+	casaDePepeYJulian.comprar(cama)
+	casaDePepeYJulian.comprar(plancha)
+	
+	assert.equals(cama, casaDePepeYJulian.compraMasCara())
+}
+
+test "electrodomésticos comprados" {
+	cuentaCorriente.depositar(100000)
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(microondas)
+	casaDePepeYJulian.comprar(cama)
+	casaDePepeYJulian.comprar(plancha)
+	
+	assert.equals([microondas, plancha], casaDePepeYJulian.electrodomesticosComprados())
+}
+
+test "es mala época" {
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(tiraDeAsado)
+	casaDePepeYJulian.comprar(paqueteDeFideos)
+	casaDePepeYJulian.comprar(cama)
+	
+	assert.notThat(casaDePepeYJulian.malaEpoca())
+}
+
+test "lista de comida" {
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(tiraDeAsado)
+	casaDePepeYJulian.comprar(paqueteDeFideos)
+	casaDePepeYJulian.comprar(unKiloDeMilanesasRebozadas)
+	casaDePepeYJulian.comprar(unKiloDeCebollas)
+	
+	const ingredientesParaFideosConSalsa = #{unKiloDeCebollas,botellaDeSalsaDeTomate,paqueteDeFideos}
+	
+	assert.equals(#{botellaDeSalsaDeTomate}, casaDePepeYJulian.queFaltaComprar(ingredientesParaFideosConSalsa))
+}
+
+test "falta comida" {
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(tiraDeAsado)
+	casaDePepeYJulian.comprar(paqueteDeFideos)
+	casaDePepeYJulian.comprar(cama)
+	
+	assert.notThat(casaDePepeYJulian.faltaComida())
+}
+
+test "saldo de cuenta corriente" {
+	casaDePepeYJulian.setCuenta(cuentaCorriente)
+	casaDePepeYJulian.comprar(cama)
+	casaDePepeYJulian.comprar(heladera)
+	
+	assert.equals(120000 ,casaDePepeYJulian.dineroDisponible())
+}
+
+test "saldo de cuenta con gastos" {
+	casaDePepeYJulian.setCuenta(cuentaConGastos)
+	casaDePepeYJulian.comprar(cama)
+	casaDePepeYJulian.comprar(heladera)
+	
+	assert.equals(14400 ,casaDePepeYJulian.dineroDisponible())
+}
+
+test "saldo de cuenta combinada" {
+	cuentaCombinada.setPrimaria(cuentaCorriente)
+	cuentaCombinada.setSecundaria(cuentaConGastos)
+	casaDePepeYJulian.setCuenta(cuentaCombinada)
+	casaDePepeYJulian.comprar(cama)
+	casaDePepeYJulian.comprar(heladera)
+	
+	assert.equals(218400 ,casaDePepeYJulian.dineroDisponible())
+}
